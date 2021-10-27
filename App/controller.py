@@ -28,11 +28,89 @@ import csv
 """
 El controlador se encarga de mediar entre la vista y el modelo.
 """
+# ___________________________________________________
+#  Inicializacion del catalogo
+# ___________________________________________________
 
-# Inicialización del Catálogo de libros
+def init():
+    """
+    Llama la funcion de inicializacion  del modelo.
+    """
+    # catalog es utilizado para interactuar con el modelo
+    analyzer = model.newAnalyzer()
+    return analyzer
 
-# Funciones para la carga de datos
+# ___________________________________________________
+#  Funciones para la carga de datos y almacenamiento
+#  de datos en los modelos
+# ___________________________________________________
+
+def loadData(analyzer, ufosFile):
+    """
+    Carga los datos de los archivos CSV en el modelo
+    """
+    ufosFile = cf.data_dir + ufosFile
+    input_file = csv.DictReader(open(ufosFile, encoding="utf-8"),
+                                delimiter=",")
+    for avistamiento in input_file:
+        model.addAvistamiento(analyzer, avistamiento)
+    return analyzer
+
 
 # Funciones de ordenamiento
 
-# Funciones de consulta sobre el catálogo
+# ___________________________________________________
+#  Funciones para consultas
+# ___________________________________________________
+
+
+def ufosSize(analyzer):
+    """
+    Numero de crimenes leidos
+    """
+    return model.ufosSize(analyzer)
+
+
+def indexHeight(analyzer):
+    """
+    Altura del indice (arbol)
+    """
+    return model.indexHeight(analyzer)
+
+
+def indexSize(analyzer):
+    """
+    Numero de nodos en el arbol
+    """
+    return model.indexSize(analyzer)
+
+
+def minKey(analyzer):
+    """
+    La menor llave del arbol
+    """
+    return model.minKey(analyzer)
+
+
+def maxKey(analyzer):
+    """
+    La mayor llave del arbol
+    """
+    return model.maxKey(analyzer)
+
+
+def getUfosByCiudad(analyzer, ciudad):
+    """
+    Retorna el total de avistamientos por ciudad
+    """
+    pass
+
+
+def getUfosByDuracion(analyzer, limInf,
+                         limSup):
+    """
+    Retorna el total de crimenes de un tipo especifico en una
+    fecha determinada
+    """
+    pass
+
