@@ -1,6 +1,6 @@
-Req. 3 - Juana María Morales Ramos – jm.moralesr1@uniandes.edu - 202021591
+Req. 2 - Juana María Morales Ramos – jm.moralesr1@uniandes.edu - 202021591
 
-Req. 4 - Mateo López Tobón - m.lopez24@uniandes.edu.co - 202021416
+Req. 3 - Mateo López Tobón - m.lopez24@uniandes.edu.co - 202021416
 
 
 
