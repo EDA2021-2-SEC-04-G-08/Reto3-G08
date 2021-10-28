@@ -38,7 +38,7 @@ operación solicitada
 #  Ruta a los archivos
 # ___________________________________________________
 
-ufosFile = 'UFOS//UFOS-utf8-small.csv'
+ufosFile = 'UFOS/UFOS-utf8-small.csv'
 cont = None
 # ___________________________________________________
 #  Menu principal
@@ -78,6 +78,12 @@ while True:
         print('Elementos en el arbol: ' + str(controller.indexSize(cont)))
         print('Menor Llave: ' + str(controller.minKey(cont)))
         print('Mayor Llave: ' + str(controller.maxKey(cont)))
+
+    elif int(inputs[0]) == 3:
+        city = input("Ingrese la ciudad de búsqueda de avistamientos: ")
+        numUfos = controller.getUfosByCiudad(cont, city)
+        print("\nTotal de avistamientos en: " + city + " son:  " +
+              str(numUfos))
     else:
         sys.exit(0)
 sys.exit(0)

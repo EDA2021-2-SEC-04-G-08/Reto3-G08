@@ -129,6 +129,7 @@ def newCityEntry(offensegrp, avistamiento):
     return ctentry
 
 
+
 # ==============================
 # Funciones de consulta
 # ==============================
@@ -167,20 +168,6 @@ def maxKey(analyzer):
     Llave mas grande
     """
     return om.maxKey(analyzer['dateIndex'])
-
-
-def getCrimesByRange(analyzer, initialDate, finalDate):
-    """
-    Retorna el numero de crimenes en un rago de fechas.
-    """
-    pass
-
-def getCrimesByRangeCode(analyzer, initialDate, offensecode):
-    """
-    Para una fecha determinada, retorna el numero de crimenes
-    de un tipo especifico.
-    """
-    pass
 
 
 # ==============================
@@ -224,6 +211,22 @@ def compareCity(city1, city2):
     else:
         return -1
 
+# ==============================
+# Requerimiento 1
+# ==============================
+
+def getUfosByCiudad(analyzer, city):
+    """
+    Para una fecha determinada, retorna el numero de crimenes
+    de un tipo especifico.
+    """
+    ufosCity = om.get(analyzer['ufos'], city)
+    if ufosCity['key'] is not None:
+        ufosmap = me.getValue(ufosCity)['ufos']
+        numUfos = mp.get(ufosmap, ufosCity)
+        if numUfos is not None:
+            return mp.size(me.getValue(numUfos)['lstcity'])
+    return 0
 
 # Construccion de modelos
 

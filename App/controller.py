@@ -99,18 +99,11 @@ def maxKey(analyzer):
     return model.maxKey(analyzer)
 
 
-def getUfosByCiudad(analyzer, ciudad):
-    """
-    Retorna el total de avistamientos por ciudad
-    """
-    pass
-
-
-def getUfosByDuracion(analyzer, limInf,
-                         limSup):
+def getUfosByCiudad(analyzer, city):
     """
     Retorna el total de crimenes de un tipo especifico en una
     fecha determinada
     """
-    pass
+    return model.getUfosByCiudad(analyzer, city)
+
 
