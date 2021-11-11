@@ -31,6 +31,7 @@ from DISClib.ADT import map as mp
 from DISClib.DataStructures import mapentry as me
 from DISClib.Algorithms.Sorting import shellsort as sa
 from DISClib.ADT import orderedmap as om
+#from DISClib.Algorithms.Trees import traversal as tv
 import datetime
 assert cf
 
@@ -48,7 +49,7 @@ def newAnalyzer():
                 }
 
     analyzer['ufos'] = lt.newList('SINGLE_LINKED', compareIds)
-    analyzer['dateIndex'] = om.newMap(omaptype='RBT',
+    analyzer['cityIndex'] = om.newMap(omaptype='RBT',
                                       comparefunction=compareDates)
     return analyzer
 
@@ -59,7 +60,7 @@ def addAvistamiento(analyzer, avistamiento):
     """
     """
     lt.addLast(analyzer['ufos'], avistamiento)
-    updateDateIndex(analyzer['dateIndex'], avistamiento)
+    updateDateIndex(analyzer['cityIndex'], avistamiento)
     return analyzer
 
 
@@ -129,7 +130,6 @@ def newCityEntry(offensegrp, avistamiento):
     return ctentry
 
 
-
 # ==============================
 # Funciones de consulta
 # ==============================
@@ -146,28 +146,28 @@ def indexHeight(analyzer):
     """
     Altura del arbol
     """
-    return om.height(analyzer['dateIndex'])
+    return om.height(analyzer['cityIndex'])
 
 
 def indexSize(analyzer):
     """
     Numero de elementos en el indice
     """
-    return om.size(analyzer['dateIndex'])
+    return om.size(analyzer['cityIndex'])
 
 
 def minKey(analyzer):
     """
     Llave mas pequena
     """
-    return om.minKey(analyzer['dateIndex'])
+    return om.minKey(analyzer['cityIndex'])
 
 
 def maxKey(analyzer):
     """
     Llave mas grande
     """
-    return om.maxKey(analyzer['dateIndex'])
+    return om.maxKey(analyzer['cityIndex'])
 
 
 # ==============================
@@ -220,13 +220,86 @@ def getUfosByCiudad(analyzer, city):
     Para una fecha determinada, retorna el numero de crimenes
     de un tipo especifico.
     """
-    ufosCity = om.get(analyzer['ufos'], city)
+    ufosCity = om.get(analyzer['cityIndex'], city)
     if ufosCity['key'] is not None:
-        ufosmap = me.getValue(ufosCity)['ufos']
+        ufosmap = me.getValue(ufosCity)['cityIndex']
         numUfos = mp.get(ufosmap, ufosCity)
         if numUfos is not None:
             return mp.size(me.getValue(numUfos)['lstcity'])
     return 0
+
+# ==============================
+# Requerimiento 2
+# ==============================
+
+"""
+def totalUfos(analyzer):
+    ufos= om.valueSet(analyzer['cityIndex'])
+    ordenado= tv.preorder(analyzer['cityIndex'])
+    #for i in lt.iterator(ufos):
+    first_key = list(ufos)[0]
+    first_val = list(ufos.values())[0]    
+    print(first_key)
+    print("--------------------")
+    print(first_val)
+"""
+def totalUfos(analyzer):
+    mayor_duracion = get_mayor_duracion(analyzer)
+    total_mayor_duracion = get_total_duracion(analyzer, mayor_duracion)
+    return mayor_duracion, total_mayor_duracion
+
+def lista_avistamientos_city(valueset):
+    lista_avistamientos = lt.newList()
+    for reg in lt.iterator(valueset):
+        values = mp.valueSet(reg['cityIndex'])
+        for val in lt.iterator(values):
+            for list_av in lt.iterator(val["lstcity"]):
+                lt.addLast(lista_avistamientos, list_av)
+    
+    return lista_avistamientos
+
+def get_mayor_duracion(analyzer):
+    ufos= om.valueSet(analyzer['cityIndex'])
+    lista_avistamientos = lista_avistamientos_city(ufos)
+    mayor = 0.0
+    for avistamiento in lt.iterator(lista_avistamientos):
+        if float(avistamiento["duration (seconds)"]) > mayor:
+            mayor = float(avistamiento["duration (seconds)"])
+    return mayor
+
+
+def get_total_duracion(analyzer,duracion):
+    ufos= om.valueSet(analyzer['cityIndex'])
+    lista_avistamientos = lista_avistamientos_city(ufos)
+    contador = 0
+    for avistamiento in lt.iterator(lista_avistamientos):
+        if float(avistamiento["duration (seconds)"]) == duracion:
+            contador += 1
+    return contador
+
+def getAvistamientosRango(analyzer, lim_inf, lim_sup):
+    ufos= om.valueSet(analyzer['cityIndex'])
+    lista_avistamientos = lista_avistamientos_city(ufos)
+    lista_ordenada = getListaOrdenada(lista_avistamientos)
+    lista_acotada = getListaAcotada(lista_ordenada, lim_inf, lim_sup)
+    return lista_ordenada
+
+
+def getListaOrdenada(lista):
+    return sa.sort(lista, ordenar_duracion)
+
+def ordenar_duracion(avi1, avi2):
+    return (float(avi1["duration (seconds)"]) < float(avi2["duration (seconds)"]))
+
+def getListaAcotada(lista_ordenada, lim_inf, lim_sup):
+    print(lim_inf)
+    print(lim_sup)
+    tamahnoSublista= lt.isPresent(lista_ordenada,float(lim_sup))-lt.isPresent(lista_ordenada, float(lim_inf))
+    a= lt.subList(lista_ordenada, lt.isPresent(lista_ordenada, float(lim_inf)), tamahnoSublista)
+    return a
+
+
+
 
 # Construccion de modelos
 

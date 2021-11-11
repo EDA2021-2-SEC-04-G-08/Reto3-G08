@@ -84,6 +84,15 @@ while True:
         numUfos = controller.getUfosByCiudad(cont, city)
         print("\nTotal de avistamientos en: " + city + " son:  " +
               str(numUfos))
+
+    elif int(inputs[0]) == 4:
+        duracion, total_ufos= controller.getTotalUfos(cont)
+        print("El total de avistamientos registrados con duración máxima " + str(duracion) +\
+            " fue " + str(total_ufos))
+        lim_inf = input("Ingrese el limite inferior: ")
+        lim_sup = input("Ingrese el limite superior: ")
+        avistamientos_rango = controller.getAvistamientosRango(cont, lim_inf, lim_sup)
+        print(avistamientos_rango)
     else:
         sys.exit(0)
 sys.exit(0)

@@ -106,4 +106,9 @@ def getUfosByCiudad(analyzer, city):
     """
     return model.getUfosByCiudad(analyzer, city)
 
+def getTotalUfos(analyzer):
+    return model.totalUfos(analyzer)
+
+def getAvistamientosRango(analyzer, lim_inf, lim_sup):
+    return model.getAvistamientosRango(analyzer, lim_inf, lim_sup)
 
