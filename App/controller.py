@@ -104,7 +104,7 @@ def getUfosByCiudad(analyzer, city):
     Retorna el total de crimenes de un tipo especifico en una
     fecha determinada
     """
-    return model.getUfosByCiudad(analyzer, city)
+    return model.lista_avistamientosC(analyzer, city)
 
 def getTotalUfos(analyzer):
     return model.totalUfos(analyzer)

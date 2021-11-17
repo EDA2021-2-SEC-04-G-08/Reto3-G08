@@ -219,7 +219,7 @@ def getUfosByCiudad(analyzer, city):
     """
     Para una fecha determinada, retorna el numero de crimenes
     de un tipo especifico.
-    """
+    
     ufosCity = om.get(analyzer['cityIndex'], city)
     if ufosCity['key'] is not None:
         ufosmap = me.getValue(ufosCity)['cityIndex']
@@ -227,6 +227,7 @@ def getUfosByCiudad(analyzer, city):
         if numUfos is not None:
             return mp.size(me.getValue(numUfos)['lstcity'])
     return 0
+    """
 
 # ==============================
 # Requerimiento 2
@@ -255,7 +256,6 @@ def lista_avistamientos_city(valueset):
         for val in lt.iterator(values):
             for list_av in lt.iterator(val["lstcity"]):
                 lt.addLast(lista_avistamientos, list_av)
-    
     return lista_avistamientos
 
 def get_mayor_duracion(analyzer):
@@ -282,7 +282,7 @@ def getAvistamientosRango(analyzer, lim_inf, lim_sup):
     lista_avistamientos = lista_avistamientos_city(ufos)
     lista_ordenada = getListaOrdenada(lista_avistamientos)
     lista_acotada = getListaAcotada(lista_ordenada, lim_inf, lim_sup)
-    return lista_ordenada
+    return lista_acotada
 
 
 def getListaOrdenada(lista):
@@ -292,13 +292,25 @@ def ordenar_duracion(avi1, avi2):
     return (float(avi1["duration (seconds)"]) < float(avi2["duration (seconds)"]))
 
 def getListaAcotada(lista_ordenada, lim_inf, lim_sup):
-    print(lim_inf)
-    print(lim_sup)
-    tamahnoSublista= lt.isPresent(lista_ordenada,float(lim_sup))-lt.isPresent(lista_ordenada, float(lim_inf))
-    a= lt.subList(lista_ordenada, lt.isPresent(lista_ordenada, float(lim_inf)), tamahnoSublista)
-    return a
-
-
+    #print(lim_inf)
+    #print(lim_sup)
+    index_inferior= 0
+    index_superior= 0
+    cont_inferior= 0
+    cont_superior= 0
+    for duracion in lt.iterator(lista_ordenada):
+        if float(duracion["duration (seconds)"])>= float(lim_inf):
+            index_inferior= cont_inferior+1
+            break
+        cont_inferior+=1
+    for duracion in lt.iterator(lista_ordenada):
+        if float(duracion["duration (seconds)"])> float(lim_sup):
+            index_superior= cont_superior+1
+            break
+        cont_superior+=1
+    num_pos= index_superior-index_inferior
+    lista_filtrada= lt.subList(lista_ordenada, index_inferior, num_pos)
+    return lista_filtrada
 
 
 # Construccion de modelos
