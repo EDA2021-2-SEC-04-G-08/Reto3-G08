@@ -52,8 +52,10 @@ def loadData(analyzer, ufosFile):
     ufosFile = cf.data_dir + ufosFile
     input_file = csv.DictReader(open(ufosFile, encoding="utf-8"),
                                 delimiter=",")
+                                
     for avistamiento in input_file:
         model.addAvistamiento(analyzer, avistamiento)
+
     return analyzer
 
 
@@ -63,6 +65,8 @@ def loadData(analyzer, ufosFile):
 #  Funciones para consultas
 # ___________________________________________________
 
+def fechas(analyzer):
+    pass
 
 def ufosSize(analyzer):
     """
@@ -83,6 +87,7 @@ def indexSize(analyzer):
     Numero de nodos en el arbol
     """
     return model.indexSize(analyzer)
+
 
 
 def minKey(analyzer):
@@ -106,9 +111,23 @@ def getUfosByCiudad(analyzer, city):
     """
     return model.getUfosByCiudad(analyzer, city)
 
-def getTotalUfos(analyzer):
-    return model.totalUfos(analyzer)
+def Req3(catalog,horaInicial,minutoInicial,horaFinal,minutoFinal):
+    """
+    Cuenta los avistamientos en un rango de horas
+    """
+    result = model.contarAvistamientosHora(catalog,horaInicial,minutoInicial,horaFinal,minutoFinal)
+    return result
 
-def getAvistamientosRango(analyzer, lim_inf, lim_sup):
-    return model.getAvistamientosRango(analyzer, lim_inf, lim_sup)
+def Req4(catalog,diaInicial,mesInicial,anioInicial,diaFinal,mesFinal,anioFinal):
+    """
+    Cuenta los avistamientos en un rango de fechas
+    """
+    result = model.contarAvistamientosDia(catalog,diaInicial,mesInicial,anioInicial,diaFinal,mesFinal,anioFinal)
+    return result
 
+def Req5(catalog,longInicial,latInicial,longFinal,latFinal):
+    """
+    Cuenta los avistamientos en un rango de longitudes y latitudes
+    """
+    result = model.contarAvistamientosZona(catalog,longInicial,latInicial,longFinal,latFinal)
+    return result
