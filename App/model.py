@@ -51,6 +51,7 @@ def newAnalyzer():
                 }
 
     analyzer['ufos'] = lt.newList('SINGLE_LINKED', compareIds)
+    analyzer["City"]=mp.newMap(maptype="PROBING",comparefunction=compare_cities)
     analyzer['dateIndex'] = om.newMap(omaptype='RBT',
                                       comparefunction=compareDates)
     analyzer['cityIndex'] = om.newMap(omaptype='RBT',
@@ -63,17 +64,64 @@ def newAnalyzer():
 
 
 # Funciones para agregar informacion al catalogo
+def compare_cities(el1,el2):
+    key2=me.getKey(el2)
+    if(el1==key2):
+        return 0
+    elif (el1> key2):
+        return 1
+    else:
+        return -1
 
 def addAvistamiento(analyzer, avistamiento):
     """
     """
     lt.addLast(analyzer['ufos'], avistamiento)
+    uptatecityindex(analyzer["City"],avistamiento)
     updateDateIndex(analyzer['dateIndex'], avistamiento)
     updateDateIndex2(analyzer['cityIndex'], avistamiento)
     updateHourIndex(analyzer['hourIndex'], avistamiento)
     updateLongitudeIndex(analyzer['longitudeIndex'], avistamiento)
     return analyzer
+def uptatecityindex(map,avistamiento):
+    ciudad=avistamiento["city"]
+    contiene=mp.contains(map,ciudad)
+    if(contiene):
+        entry=me.getValue(mp.get(map,ciudad))["lista"]
+        lt.addLast(entry,avistamiento)
+    else:
+        entry=createEntry(ciudad,avistamiento)
+        mp.put(map,ciudad,entry)
 
+def lista_avistamientosC(analyzer, city):
+    map=analyzer["City"]
+    lista=me.getValue(mp.get(map,city))["lista"]
+    lista=ms.sort(lista,ordenar_fechaxd)
+    llaves=lt.size(mp.keySet(map))
+    tres1_tres2=lt.newList("ARRAY_LIST")
+    for i in range(1,4):
+        elemento=lt.getElement(lista,i)
+        if(elemento != None):
+            lt.addLast(tres1_tres2,elemento)
+    for i in range(lt.size(lista)-2,lt.size(lista)+1):
+        elemento=lt.getElement(lista,i)
+        if(elemento != None):
+            lt.addLast(tres1_tres2,elemento)
+    return llaves,tres1_tres2
+
+def ordenar_fechaxd(el1,el2):
+    el1Fecha=el1["datetime"].split(" ")[0].split("-")
+    el1Hora=el1["datetime"].split(" ")[1].split(":")
+    el2Fecha=el2["datetime"].split(" ")[0].split("-")
+    el2Hora=el2["datetime"].split(" ")[1].split(":")
+    fecha1=datetime.datetime(int(el1Fecha[0]),int(el1Fecha[1]),int(el1Fecha[2]),int(el1Hora[0]),int(el1Hora[1]),0,0)
+    fecha2=datetime.datetime(int(el2Fecha[0]),int(el2Fecha[1]),int(el2Fecha[2]),int(el2Hora[0]),int(el2Hora[1]),0,0)
+    return fecha1<fecha2
+
+def createEntry(ciudad,avistamiento):
+    dic={"ciudad":ciudad,"lista":lt.newList("ARRAY_LIST")}
+    lt.addLast(dic["lista"],avistamiento)
+    return dic
 def updateHourIndex(map, avistamiento):
     """
     Se toma la hora del avistamiento y se busca si ya existe en el arbol

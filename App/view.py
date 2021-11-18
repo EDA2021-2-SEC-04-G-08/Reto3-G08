@@ -25,7 +25,7 @@ import sys
 import controller
 from DISClib.ADT import list as lt
 assert cf
-
+from prettytable import PrettyTable
 
 """
 La vista se encarga de la interacción con el usuario
@@ -77,9 +77,13 @@ while True:
 
     elif int(inputs[0]) == 3:
         city = input("Ingrese la ciudad de búsqueda de avistamientos: ")
-        numUfos = controller.getUfosByCiudad(cont, city)
-        print("\nTotal de avistamientos en: " + city + " son:  " +
-              str(numUfos))
+        numUfos,lista = controller.getUfosByCiudad(cont, city)
+        x = PrettyTable()
+        x.field_names = ["Datetime","city","State","Country","Shape","Duration(Seconds)"]
+        for ufo in lt.iterator(lista):
+            x.add_row([ufo["datetime"],ufo["city"],ufo["state"],ufo["country"],ufo["shape"],ufo["duration (seconds)"]])
+        print("Hay una cantidad de",numUfos,"ciudades con avistamientos de UFOS")
+        print(x)
 
     elif int(inputs[0]) == 4:
         duracion, total_ufos= controller.getTotalUfos(cont)
